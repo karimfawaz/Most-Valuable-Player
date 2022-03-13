@@ -4,11 +4,11 @@ import 'package:http/http.dart' as http;
 
 void main() => runApp(MaterialApp(
     theme: ThemeData(
-      accentColor: Colors.green,
       scaffoldBackgroundColor: Colors.green[100],
       primaryColor: Colors.green,
+      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.green),
     ),
-    home: MyApp()));
+    home: const MyApp()));
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -54,48 +54,43 @@ class _MyAppState extends State<MyApp> {
             .children[0] // inside the td there is a link for the player's name
             .innerHtml;
         var playerPosition = playerDetails.children[1].children[0].innerHtml;
-        print(playerName);
-        print(playerPosition);
+        var playerValue = player.children[5].children[0].innerHtml;
+        var playerValueNumb =
+            playerValue.replaceAll("£", "").replaceAll("m", "");
+        var playerLink = playerDetails
+            .children[0] // tbody child
+            .children[1] // first child is the image second is the name
+            .innerHtml
+            .split(
+                '"')[3]; // inside the td there is a link for the player's name
+        // print(playerValue);
+        // print(playerValueNumb);
+        var newLink = await http.Client()
+            .get(Uri.parse('https://www.transfermarkt.co.uk' + playerLink));
 
-        // var responseString1 = document.getElementsByClassName('hauptlink')[51];
-        // print(responseString1.text.trim());
+        var newDocument = parser.parse(newLink.body);
 
-        // var responseString2 = document.getElementsByClassName('zentriert')[4];
-        // print(responseString2.text.trim());
+        var playerTeamImage = newDocument
+            .getElementsByClassName("dataZusatzImage")[0]
+            .children[0]
+            .innerHtml
+            .split('"')[1]
+            .split(',')[0]
+            .trim()
+            .split(' ')[0];
+        var playerImage =
+            newDocument.getElementsByClassName("modal-trigger")[0].innerHtml;
 
-        // document
-        //     .getElementsByClassName('articles-list')[0]
-        //     .children[0]
-        //     .children[0]
-        //     .children[0];
+        print(playerImage);
+        // print(playerTeamImage);
 
-        // print(responseString1.text.trim());
-
-        // // Scraping the second article title
-        // var responseString2 = document
-        //     .getElementsByClassName('articles-list')[0]
-        //     .children[1]
-        //     .children[0]
-        //     .children[0];
-
-        // print(responseString2.text.trim());
-
-        // // Scraping the third article title
-        // var responseString3 = document
-        //     .getElementsByClassName('articles-list')[0]
-        //     .children[2]
-        //     .children[0]
-        //     .children[0];
-
-        // print(responseString3.text.trim());
-
+        // print(playerName);
+        // print(playerPosition);
+        // print(playerLink);
+        // var responseString1 = docu
         // // Converting the extracted titles into
         // // string and returning a list of Strings
-        return [
-          // responseString1.text.trim(),
-          // responseString2.text.trim(),
-          // responseString3.text.trim()
-        ];
+        return [playerName, playerPosition, playerTeamImage];
       } catch (e) {
         return ['', '', 'ERROR!'];
       }
@@ -107,60 +102,34 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('GeeksForGeeks')),
+      appBar: AppBar(title: const Text('Most Valuable Player')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // if isLoading is true show loader
-            // else show Column of Texts
             isLoading
                 ? const CircularProgressIndicator()
                 : Column(
-                    children: [
-                      Text(result1,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      Text(result2,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      Text(result3,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                    ],
+                    children: [Image.network(result1)],
                   ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.08),
             MaterialButton(
               onPressed: () async {
-                // Setting isLoading true to show the loader
                 setState(() {
                   isLoading = true;
                 });
 
-                // Awaiting for web scraping function
-                // to return list of strings
                 final response = await extractData();
 
-                // Setting the received strings to be
-                // displayed and making isLoading false
-                // to hide the loader
                 setState(() {
-                  // result1 = response[0];
-                  // result2 = response[1];
-                  // result3 = response[2];
+                  result1 = response[2];
                   isLoading = false;
                 });
               },
               child: const Text(
-                'Scrap Data',
+                'Scrape Data',
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.green,
