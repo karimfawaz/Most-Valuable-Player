@@ -12,9 +12,6 @@ class MVP extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider<Orders>(create: (_) => Orders()),
-        // class Orders with ChangeNotifier {
-
         ChangeNotifierProvider<PlayerManager>(create: (_) => PlayerManager()),
       ],
       child: MaterialApp(

@@ -148,12 +148,11 @@ class PlayerManager with ChangeNotifier {
             .innerHtml
             .trim()
             .split('"')[5];
-        print(playerName);
-        print(playerValue);
-        print(pageRandNumb);
+
         if (otherPlayerValue == playerValueNumb) {
-          getSecondPlayer(otherPlayerPage, otherPlayerValue);
+          return getSecondPlayer(otherPlayerPage, otherPlayerValue);
         }
+
         return [
           playerName,
           playerPosition,
@@ -164,10 +163,10 @@ class PlayerManager with ChangeNotifier {
           pageRandNumb.toString()
         ];
       } catch (e) {
-        return ['', '', 'ERROR!'];
+        return [];
       }
     } else {
-      return ['', '', 'ERROR: ${response.statusCode}.'];
+      return ['ERROR: ${response.statusCode}.'];
     }
   }
 }
