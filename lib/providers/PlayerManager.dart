@@ -9,7 +9,7 @@ class PlayerManager with ChangeNotifier {
     // Getting the response from the targeted url
     Random rnd = Random();
     var playerRandNumb = rnd.nextInt(24);
-    var pageRandNumb = 1 + rnd.nextInt(19);
+    var pageRandNumb = 1 + rnd.nextInt(9);
 
     final response = await http.Client().get(Uri.parse(
         'https://www.transfermarkt.co.uk/spieler-statistik/wertvollstespieler/marktwertetop?page=' +
@@ -153,6 +153,9 @@ class PlayerManager with ChangeNotifier {
           return getSecondPlayer(otherPlayerPage, otherPlayerValue);
         }
 
+        print(playerName);
+        print(playerValue);
+        print(pageRandNumb);
         return [
           playerName,
           playerPosition,
