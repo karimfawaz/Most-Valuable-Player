@@ -81,15 +81,15 @@ class _MyAppState extends State<MyApp> {
                   isLoading = true;
                 });
 
-                final response = await playerData.getRandomPlayer();
-                print(response[6]);
-                final secondPlayer = await playerData.getSecondPlayer(
-                    int.parse(response[6]), double.parse(response[5]));
+                playerData.getRandomPlayer();
+                // print(response[6]);
+                // final secondPlayer = await playerData.getSecondPlayer(
+                //     int.parse(response[6]), double.parse(response[5]));
 
                 setState(() {
-                  result1 = response[2];
-                  result2 = response[3];
-                  result3 = response[5];
+                  // result1 = response[2];
+                  // result2 = response[3];
+                  // result3 = response[5];
                   isLoading = false;
                 });
               },
